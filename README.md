@@ -1,3 +1,10 @@
-# Northcoders News API
+Installation
+To run the API locally you will need to create two .env files
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+env.test containing:
+
+  PGDATABASE=nc_news_test
+
+.env.development containing:
+
+  PGDATABASE=nc_news
