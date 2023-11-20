@@ -1,5 +1,4 @@
 const db = require("../db/connection");
-const endpoints = require("../endpoints.json");
 const fs = require("fs/promises");
 
 exports.selectTopics = () => {
@@ -8,9 +7,8 @@ exports.selectTopics = () => {
   });
 };
 
-
 exports.readEndpoint = () => {
-     return fs.readFile("endpoints.json").then((endpoints) => {
-       return JSON.parse(endpoints);
-     });
-}
+  return fs.readFile("endpoints.json").then((endpoints) => {
+    return JSON.parse(endpoints);
+  });
+};
