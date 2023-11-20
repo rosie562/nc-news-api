@@ -14,8 +14,10 @@ describe("GET /api/topics", () => {
       .expect(200)
       .then(({ body }) => {
         const { topics } = body;
-        expect(topics[0]).toHaveProperty("slug");
-        expect(topics[0]).toHaveProperty("description");
+        topics.forEach((topic) => {
+          expect(topic).toHaveProperty("slug");
+          expect(topic).toHaveProperty("description");
+        });
         expect(topics).toEqual([
           { slug: "mitch", description: "The man, the Mitch, the legend" },
           { slug: "cats", description: "Not dogs" },
