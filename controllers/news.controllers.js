@@ -2,6 +2,7 @@ const {
   selectTopics,
   selectArticleById,
   readEndpoint,
+  selectCommentByArticleId,
 } = require("../models/news.models");
 
 exports.getTopics = (req, res, next) => {
@@ -28,3 +29,13 @@ exports.getArticle = (req, res, next) => {
     })
     .catch(next);
 };
+ 
+exports.getCommentByArticleId = (req, res, next) => {
+    const { article_id } = req.params;
+    selectCommentByArticleId(article_id)
+      .then((comment) => {
+        console.log(comment)
+        res.status(200).send({ comment });
+      })
+      .catch(next);
+}

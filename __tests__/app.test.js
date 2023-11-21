@@ -87,4 +87,21 @@ describe("GET /api/articles/:article_id", () => {
   });
 });
 
-
+describe("GET /api/articles/:article_id/comments", () => {
+  test("200: an array of comments for the given article_id with the correct properties", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comment } = body;
+        comment.forEach((comment) => {
+          expect(comment).toHaveProperty("comment_id");
+          expect(comment).toHaveProperty("votes");
+          expect(comment).toHaveProperty("created_at");
+          expect(comment).toHaveProperty("author");
+          expect(comment).toHaveProperty("body");
+          expect(comment).toHaveProperty("article_id");
+        });
+      });
+  });
+});
