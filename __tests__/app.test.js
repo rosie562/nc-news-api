@@ -90,18 +90,38 @@ describe("GET /api/articles/:article_id", () => {
 describe("GET /api/articles/:article_id/comments", () => {
   test("200: an array of comments for the given article_id with the correct properties", () => {
     return request(app)
-      .get("/api/articles/1/comments")
+      .get("/api/articles/3/comments")
       .expect(200)
       .then(({ body }) => {
-        const { comment } = body;
-        comment.forEach((comment) => {
-          expect(comment).toHaveProperty("comment_id");
-          expect(comment).toHaveProperty("votes");
-          expect(comment).toHaveProperty("created_at");
-          expect(comment).toHaveProperty("author");
-          expect(comment).toHaveProperty("body");
-          expect(comment).toHaveProperty("article_id");
+        const { comments } = body;
+        expect(comments).toBeSortedBy("created_at", { descending: true });
+        comments.forEach((comments) => {
+          expect(comments).toHaveProperty("comment_id");
+          expect(comments).toHaveProperty("votes");
+          expect(comments).toHaveProperty("created_at");
+          expect(comments).toHaveProperty("author");
+          expect(comments).toHaveProperty("body");
+          expect(comments).toHaveProperty("article_id");
         });
       });
   });
+    test("404: should respond with an error message if the path does not exist", () => {
+    return request(app)
+      .get("/api/articles/999/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("article ID does not exist");
+      });
+  });
+
+  test("400: should respond with an error message if the path is not valid", () => {
+    return request(app)
+      .get("/api/articles/banana/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
 });
+
+

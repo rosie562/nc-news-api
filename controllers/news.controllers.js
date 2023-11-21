@@ -29,13 +29,12 @@ exports.getArticle = (req, res, next) => {
     })
     .catch(next);
 };
- 
+
 exports.getCommentByArticleId = (req, res, next) => {
-    const { article_id } = req.params;
-    selectCommentByArticleId(article_id)
-      .then((comment) => {
-        console.log(comment)
-        res.status(200).send({ comment });
-      })
-      .catch(next);
-}
+  const { article_id } = req.params;
+  selectCommentByArticleId(article_id)
+    .then((comments) => {
+      res.status(200).send({ comments });
+    })
+    .catch(next);
+};
