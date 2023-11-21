@@ -62,7 +62,7 @@ describe("GET /api/articles/:article_id", () => {
         expect(body.msg).toBe("path not found");
       });
   });
-  test.only("400: should respond with an error message if the path is not valid", () => {
+  test("400: should respond with an error message if the path is not valid", () => {
     return request(app)
       .get("/api/articles/banana")
       .expect(400)
