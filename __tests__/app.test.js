@@ -3,6 +3,7 @@ const request = require("supertest");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data/index");
+const endpoints = require("../endpoints.json");
 
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
@@ -37,6 +38,19 @@ describe("ANY /notapath", () => {
   });
 });
 
+describe("GET /api", () => {
+  test("200: should respond with an object describing all the available endpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        expect(typeof body).toBe("object");
+        const { endpoint } = body;
+        expect(endpoint).toEqual(endpoints);
+      });
+  });
+});
+
 describe("GET /api/articles/:article_id", () => {
   test("200: responds with an individual article ", () => {
     return request(app)
@@ -62,6 +76,7 @@ describe("GET /api/articles/:article_id", () => {
         expect(body.msg).toBe("path not found");
       });
   });
+
   test("400: should respond with an error message if the path is not valid", () => {
     return request(app)
       .get("/api/articles/banana")
@@ -71,3 +86,5 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 });
+
+
