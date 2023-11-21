@@ -45,7 +45,10 @@ describe("GET /api", () => {
       .expect(200)
       .then(({ body }) => {
         expect(typeof body).toBe("object");
-        expect(body.endpoint).toEqual(endpoints);
+        const { endpoint } = body;
+        expect(endpoint).toEqual(endpoints);
+        expect(endpoint).toHaveProperty("GET /api");
+        expect(endpoint["GET /api"]).toHaveProperty("description");
       });
   });
 });
