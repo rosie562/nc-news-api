@@ -86,7 +86,6 @@ describe("GET /api/articles/:article_id", () => {
   });
 });
 
-
 describe("GET /api/articles/:article_id/comments", () => {
   test("200: an array of comments for the given article_id with the correct properties", () => {
     return request(app)
@@ -105,7 +104,7 @@ describe("GET /api/articles/:article_id/comments", () => {
         });
       });
   });
-    test("404: should respond with an error message if the path does not exist", () => {
+  test("404: should respond with an error message if the path does not exist", () => {
     return request(app)
       .get("/api/articles/999/comments")
       .expect(404)
@@ -124,8 +123,6 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-
-
 describe("GET /api/articles", () => {
   test("200: responds with an array of all the articles", () => {
     return request(app)
@@ -133,7 +130,7 @@ describe("GET /api/articles", () => {
       .expect(200)
       .then(({ body }) => {
         const { articles } = body;
-        expect(articles).toHaveLength(13)
+        expect(articles).toHaveLength(13);
         expect(articles).toBeSortedBy("created_at", { descending: true });
         articles.forEach((article) => {
           expect(typeof article).toBe("object");
@@ -151,4 +148,3 @@ describe("GET /api/articles", () => {
       });
   });
 });
-

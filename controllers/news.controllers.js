@@ -4,7 +4,6 @@ const {
   readEndpoint,
   selectCommentByArticleId,
   selectArticles,
-
 } = require("../models/news.models");
 
 exports.getTopics = (req, res, next) => {
@@ -32,7 +31,6 @@ exports.getArticleById = (req, res, next) => {
     .catch(next);
 };
 
-
 exports.getCommentByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   selectCommentByArticleId(article_id)
@@ -40,10 +38,9 @@ exports.getCommentByArticleId = (req, res, next) => {
       res.status(200).send({ comments });
     })
     .catch(next);
-
+};
 exports.getAllArticles = (req, res, next) => {
   selectArticles().then((articles) => {
     res.status(200).send({ articles });
   });
-
 };
