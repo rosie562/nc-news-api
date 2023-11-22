@@ -194,7 +194,7 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
   test("404: should respond with an error message if the article does not exist", () => {
     const newComment = {
-      username: "northcoders",
+      username: "icellusedkars",
       body: "hello world",
     };
     return request(app)
@@ -207,7 +207,7 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
   test("400: should respond with an error message if the path is not valid", () => {
     const newComment = {
-      username: "northcoders",
+      username: "icellusedkars",
       body: "hello world",
     };
     return request(app)
@@ -217,5 +217,17 @@ describe("POST /api/articles/:article_id/comments", () => {
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");
       });
-  });
+    });
+    test("400: should respond with an error message if there are missing properties on request body", () => {
+    const newComment = {
+      username: "icellusedkars",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("username and message required");
+      });
+    });
 });

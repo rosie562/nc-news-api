@@ -72,11 +72,20 @@ exports.checkIfArticleExists = (article_id) => {
 };
 
 exports.createCommentByArticleId = (username, body, article_id) => {
+  if ((!username && body) || (username && !body)) {
+    return Promise.reject({
+      status: 400,
+      msg: "username and message required",
+    });
+  }
   return db
     .query(`SELECT * FROM users WHERE username = $1`, [username])
     .then(({ rows }) => {
       if (rows.length === 0) {
-        return Promise.reject({status: 404, msg: `User ${username} does not exist`})
+        return Promise.reject({
+          status: 404,
+          msg: `User ${username} does not exist`,
+        });
       }
       return db
         .query(
@@ -87,6 +96,5 @@ exports.createCommentByArticleId = (username, body, article_id) => {
         .then(({ rows: [comment] }) => {
           return comment;
         });
-    })
+    });
 };
- 
