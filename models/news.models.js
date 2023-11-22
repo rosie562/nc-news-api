@@ -26,6 +26,18 @@ exports.selectArticleById = (article_id) => {
     });
 };
 
+exports.selectCommentByArticleId = (article_id) => {
+  return db
+    .query(
+      `SELECT * FROM comments WHERE article_id = $1 
+    ORDER BY created_at DESC;`,
+      [article_id]
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
+};
+
 exports.selectArticles = () => {
   let queryString = `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url,
     COUNT(comment_id) AS comment_count 
@@ -38,4 +50,22 @@ exports.selectArticles = () => {
   return db.query(queryString).then(({ rows }) => {
     return rows;
   });
+};
+
+exports.checkIfArticleExists = (article_id) => {
+  return db
+    .query(
+      `SELECT * FROM articles
+    WHERE article_id = $1;`,
+      [article_id]
+    )
+    .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject({
+          status: 404,
+          msg: `Article id ${article_id} does not exist`,
+        });
+      }
+      return rows;
+    });
 };

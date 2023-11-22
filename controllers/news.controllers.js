@@ -2,7 +2,9 @@ const {
   selectTopics,
   selectArticleById,
   readEndpoint,
+  selectCommentByArticleId,
   selectArticles,
+  checkIfArticleExists,
 } = require("../models/news.models");
 
 exports.getTopics = (req, res, next) => {
@@ -30,8 +32,22 @@ exports.getArticleById = (req, res, next) => {
     .catch(next);
 };
 
+exports.getCommentByArticleId = (req, res, next) => {
+  const { article_id } = req.params;
+  checkIfArticleExists(article_id)
+    .then(() => {
+      return selectCommentByArticleId(article_id);
+    })
+    .then((comments) => {
+      res.status(200).send({ comments });
+    })
+    .catch(next);
+};
+
 exports.getAllArticles = (req, res, next) => {
-  selectArticles().then((articles) => {
-    res.status(200).send({ articles });
-  });
+  selectArticles()
+    .then((articles) => {
+      res.status(200).send({ articles });
+    })
+    .catch(next);
 };
