@@ -87,12 +87,13 @@ describe("GET /api/articles/:article_id", () => {
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
-  test("200: an array of comments for the given article_id with the correct properties", () => {
+  test("200: returns an array of comments for the given article_id with the correct properties", () => {
     return request(app)
-      .get("/api/articles/3/comments")
+      .get("/api/articles/1/comments")
       .expect(200)
       .then(({ body }) => {
         const { comments } = body;
+        expect(comments).toHaveLength(11);
         expect(comments).toBeSortedBy("created_at", { descending: true });
         comments.forEach((comments) => {
           expect(comments).toHaveProperty("comment_id");
@@ -104,12 +105,22 @@ describe("GET /api/articles/:article_id/comments", () => {
         });
       });
   });
+  test("200: returns an empty array for the given article_id with a valid id that has no comments", () => {
+    return request(app)
+      .get("/api/articles/4/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(comments).toHaveLength(0);
+        expect(comments).toEqual([]);
+      });
+  });
   test("404: should respond with an error message if the path does not exist", () => {
     return request(app)
       .get("/api/articles/999/comments")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("article ID does not exist");
+        expect(body.msg).toBe("Article id 999 does not exist");
       });
   });
 
