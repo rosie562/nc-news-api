@@ -5,6 +5,7 @@ const {
   selectCommentByArticleId,
   selectArticles,
   checkIfArticleExists,
+  createCommentByArticleId,
 } = require("../models/news.models");
 
 exports.getTopics = (req, res, next) => {
@@ -48,6 +49,19 @@ exports.getAllArticles = (req, res, next) => {
   selectArticles()
     .then((articles) => {
       res.status(200).send({ articles });
+    })
+    .catch(next);
+};
+
+exports.addCommentByArticleId = (req, res, next) => {
+  const { username, body } = req.body;
+  const { article_id } = req.params;
+  checkIfArticleExists(article_id)
+    .then(() => {
+      return createCommentByArticleId(username, body, article_id);
+    })
+    .then((comment) => {
+      res.status(201).send({ comment });
     })
     .catch(next);
 };
