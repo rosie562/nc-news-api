@@ -73,7 +73,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/999")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("article ID doesn't exist");
+        expect(body.msg).toBe("article ID 999 doesn't exist");
       });
   });
   test("400: should respond with an error message if the path is not valid", () => {
@@ -120,7 +120,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/999/comments")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Article id 999 does not exist");
+        expect(body.msg).toBe("article id 999 does not exist");
       });
   });
   test("400: should respond with an error message if the path is not valid", () => {
@@ -189,7 +189,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       .send(newComment)
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("User northcoders does not exist");
+        expect(body.msg).toBe("user northcoders does not exist");
       });
   });
   test("404: should respond with an error message if the article does not exist", () => {
@@ -202,7 +202,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       .send(newComment)
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Article id 999 does not exist");
+        expect(body.msg).toBe("article id 999 does not exist");
       });
   });
   test("400: should respond with an error message if the path is not valid", () => {
@@ -241,92 +241,119 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { article } = body;
-        expect(article).toEqual([{
-          article_id: 1,
-          title: "Living in the shadow of a great man",
-          topic: "mitch",
-          author: "butter_bridge",
-          body: "I find this existence challenging",
-          created_at: "2020-07-09T20:11:00.000Z",
-          votes: 101,
-          article_img_url:
-            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-        }]);
+        expect(article).toEqual([
+          {
+            article_id: 1,
+            title: "Living in the shadow of a great man",
+            topic: "mitch",
+            author: "butter_bridge",
+            body: "I find this existence challenging",
+            created_at: "2020-07-09T20:11:00.000Z",
+            votes: 101,
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          },
+        ]);
       });
   });
   test("200: should decrease the number of votes on a given article by the given amount and return an updated article", () => {
-      const newVote = { inc_votes: -10 };
-      return request(app)
+    const newVote = { inc_votes: -10 };
+    return request(app)
       .patch("/api/articles/1")
       .send(newVote)
       .expect(200)
       .then(({ body }) => {
-          const { article } = body;
-          expect(article).toEqual([
-              {
-                  article_id: 1,
-                  title: "Living in the shadow of a great man",
-                  topic: "mitch",
-                  author: "butter_bridge",
-                  body: "I find this existence challenging",
-                  created_at: "2020-07-09T20:11:00.000Z",
-                  votes: 90,
-                  article_img_url:
-                  "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-                },
-            ]);
-        });
-    });
-    test("400: should return an error message if the inc_votes decreases the vote total on the article to less than zero", () => {
-      const newVote = { inc_votes: -101 };
-      return request(app)
-        .patch("/api/articles/1")
-        .send(newVote)
-        .expect(400)
-        .then(({ body }) => {
-          expect(body.msg).toBe("votes cannot be less than 0");
-        });
-    });
-    test("404: should respond with an error message if the article does not exist", () => {
-      const newVote = { inc_votes: 1 };
-      return request(app)
-        .patch("/api/articles/65")
-        .send(newVote)
-        .expect(404)
-        .then(({ body }) => {
-          expect(body.msg).toBe("Article id 65 does not exist");
-        });
-    });
-    test("400: should respond with an error message if there are missing properties on request body", () => {
-      const newVote = { other_property: 1 };
-      return request(app)
-        .patch("/api/articles/1")
-        .send(newVote)
-        .expect(400)
-        .then(({ body }) => {
-          expect(body.msg).toBe("vote incrementer needed");
-        });
-    });
-    test("400: should respond with an error message if inc_votes is not a number", () => {
-      const newVote = { inc_votes: 'banana' };
-      return request(app)
-        .patch("/api/articles/1")
-        .send(newVote)
-        .expect(400)
-        .then(({ body }) => {
-          expect(body.msg).toBe("bad request");
-        });
-    });
-    test("400: should respond with an error message if the path is not valid", () => {
-      const newVote = { inc_votes: 1 };
-      return request(app)
-        .patch("/api/articles/banana")
-        .send(newVote)
-        .expect(400)
-        .then(({ body }) => {
-          expect(body.msg).toBe("bad request");
-        });
-    });
+        const { article } = body;
+        expect(article).toEqual([
+          {
+            article_id: 1,
+            title: "Living in the shadow of a great man",
+            topic: "mitch",
+            author: "butter_bridge",
+            body: "I find this existence challenging",
+            created_at: "2020-07-09T20:11:00.000Z",
+            votes: 90,
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          },
+        ]);
+      });
+  });
+  test("400: should return an error message if the inc_votes decreases the vote total on the article to less than zero", () => {
+    const newVote = { inc_votes: -101 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("votes cannot be less than 0");
+      });
+  });
+  test("404: should respond with an error message if the article does not exist", () => {
+    const newVote = { inc_votes: 1 };
+    return request(app)
+      .patch("/api/articles/65")
+      .send(newVote)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("article id 65 does not exist");
+      });
+  });
+  test("400: should respond with an error message if there are missing properties on request body", () => {
+    const newVote = { other_property: 1 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("vote incrementer needed");
+      });
+  });
+  test("400: should respond with an error message if inc_votes is not a number", () => {
+    const newVote = { inc_votes: "banana" };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+  test("400: should respond with an error message if the path is not valid", () => {
+    const newVote = { inc_votes: 1 };
+    return request(app)
+      .patch("/api/articles/banana")
+      .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
 });
 
-
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: should delete the comment at the given comment id and not send a response", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then((response) => {
+        expect(response.body).toEqual({});
+      });
+  });
+  test("404: should respond with an error message if the comment id does not exist", () => {
+    return request(app)
+      .delete("/api/comments/80")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("no comment found at comment_id 80");
+      });
+  });
+  test("400: should respond with an error message if comment_id is not valid", () => {
+    return request(app) 
+      .delete("/api/comments/banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+});
