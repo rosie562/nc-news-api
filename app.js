@@ -7,6 +7,7 @@ const {
   getEndpoints,
   getCommentByArticleId,
   addCommentByArticleId,
+  updateVotes,
 } = require("./controllers/news.controllers");
 
 const {
@@ -28,6 +29,8 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id/comments", getCommentByArticleId);
 
 app.post("/api/articles/:article_id/comments", addCommentByArticleId)
+
+app.patch("/api/articles/:article_id", updateVotes)
 
 app.all("*", (req, res) => {
   res.status(404).send({ msg: "path not found" });

@@ -6,6 +6,7 @@ const {
   selectArticles,
   checkIfArticleExists,
   createCommentByArticleId,
+  updateVotesByArticleId,
 } = require("../models/news.models");
 
 exports.getTopics = (req, res, next) => {
@@ -62,6 +63,19 @@ exports.addCommentByArticleId = (req, res, next) => {
     })
     .then((comment) => {
       res.status(201).send({ comment });
+    })
+    .catch(next);
+};
+
+exports.updateVotes = (req, res, next) => {
+  const { inc_votes } = req.body;
+  const { article_id } = req.params;
+  checkIfArticleExists(article_id)
+    .then(() => {
+      return updateVotesByArticleId(inc_votes, article_id);
+    })
+    .then((article) => {
+      res.status(200).send({ article });
     })
     .catch(next);
 };
