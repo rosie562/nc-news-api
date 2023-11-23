@@ -277,7 +277,17 @@ describe("PATCH /api/articles/:article_id", () => {
             ]);
         });
     });
-    test("404: should respond with an error message if the path does not exist", () => {
+    test("400: should return an error message if the inc_votes decreases the vote total on the article to less than zero", () => {
+      const newVote = { inc_votes: -101 };
+      return request(app)
+        .patch("/api/articles/1")
+        .send(newVote)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("votes cannot be less than 0");
+        });
+    });
+    test("404: should respond with an error message if the article does not exist", () => {
       const newVote = { inc_votes: 1 };
       return request(app)
         .patch("/api/articles/65")
@@ -285,6 +295,36 @@ describe("PATCH /api/articles/:article_id", () => {
         .expect(404)
         .then(({ body }) => {
           expect(body.msg).toBe("Article id 65 does not exist");
+        });
+    });
+    test("400: should respond with an error message if there are missing properties on request body", () => {
+      const newVote = { other_property: 1 };
+      return request(app)
+        .patch("/api/articles/1")
+        .send(newVote)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("vote incrementer needed");
+        });
+    });
+    test("400: should respond with an error message if inc_votes is not a number", () => {
+      const newVote = { inc_votes: 'banana' };
+      return request(app)
+        .patch("/api/articles/1")
+        .send(newVote)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
+        });
+    });
+    test("400: should respond with an error message if the path is not valid", () => {
+      const newVote = { inc_votes: 1 };
+      return request(app)
+        .patch("/api/articles/banana")
+        .send(newVote)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
         });
     });
 });

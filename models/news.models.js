@@ -112,6 +112,12 @@ exports.updateVotesByArticleId = (inc_votes, article_id) => {
       [inc_votes, article_id]
     )
     .then(({ rows }) => {
+        if (rows[0].votes < 0 ){
+          return Promise.reject({
+            status: 400,
+            msg: "votes cannot be less than 0",
+          });   
+        }
       return rows;
     });
 };
