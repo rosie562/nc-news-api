@@ -9,6 +9,7 @@ const {
   addCommentByArticleId,
   updateVotes,
   deleteComment,
+  getAllUsers,
 } = require("./controllers/news.controllers");
 
 const {
@@ -34,6 +35,8 @@ app.post("/api/articles/:article_id/comments", addCommentByArticleId)
 app.patch("/api/articles/:article_id", updateVotes)
 
 app.delete("/api/comments/:comment_id", deleteComment);
+
+app.get("/api/users", getAllUsers);
 
 app.all("*", (req, res) => {
   res.status(404).send({ msg: "path not found" });

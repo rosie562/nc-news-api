@@ -8,6 +8,7 @@ const {
   createCommentByArticleId,
   updateVotesByArticleId,
   deleteCommentById,
+  selectUsers,
 } = require("../models/news.models");
 
 exports.getTopics = (req, res, next) => {
@@ -89,3 +90,15 @@ exports.deleteComment = (req, res, next) => {
     })
     .catch(next);
 };
+
+exports.getAllUsers = (req, res, next) => {
+  selectUsers()
+    .then((users) => {
+      res.status(200).send({ users });
+    })
+    .catch(next);
+};
+
+
+
+
