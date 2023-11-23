@@ -175,9 +175,17 @@ describe("GET /api/articles", () => {
       .get("/api/articles?topic=dogs")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("topic dogs does not exist");
+        expect(body.msg).toBe("no articles for this topic");
       });
   });
+   test("404: should return a 404 error message when the topic exists but there are no articles with that topic", () => {
+     return request(app)
+       .get("/api/articles?topic=paper")
+       .expect(404)
+       .then(({ body }) => {
+         expect(body.msg).toBe("no articles for this topic");
+       });
+   });
 });
 
 describe("POST /api/articles/:article_id/comments", () => {

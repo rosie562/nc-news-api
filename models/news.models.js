@@ -63,7 +63,7 @@ exports.selectArticles = (topic) => {
     if (!rows.length && topic) {
       return Promise.reject({
         status: 404,
-        msg: `topic ${topic} does not exist`,
+        msg: `no articles for this topic`,
       });
     }
     return rows;
