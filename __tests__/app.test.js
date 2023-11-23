@@ -91,7 +91,6 @@ describe("GET /api/articles/:article_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { article } = body;
-        console.log(article)
         expect(article).toHaveProperty('comment_count')
         expect(article['comment_count']).toBe('11');
       });

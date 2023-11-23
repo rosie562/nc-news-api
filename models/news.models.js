@@ -27,7 +27,6 @@ exports.selectArticleById = (article_id) => {
       [article_id]
     )
     .then(({ rows }) => {
-      console.log(rows);
       if (!rows.length) {
         return Promise.reject({
           status: 404,
