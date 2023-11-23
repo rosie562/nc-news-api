@@ -7,6 +7,7 @@ const {
   checkIfArticleExists,
   createCommentByArticleId,
   updateVotesByArticleId,
+  deleteCommentById,
 } = require("../models/news.models");
 
 exports.getTopics = (req, res, next) => {
@@ -76,6 +77,15 @@ exports.updateVotes = (req, res, next) => {
     })
     .then((article) => {
       res.status(200).send({ article });
+    })
+    .catch(next);
+};
+
+exports.deleteComment = (req, res, next) => {
+  const { comment_id } = req.params;
+  deleteCommentById(comment_id)
+    .then(() => {
+      res.status(204).send();
     })
     .catch(next);
 };

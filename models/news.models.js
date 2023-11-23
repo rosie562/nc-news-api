@@ -21,7 +21,7 @@ exports.selectArticleById = (article_id) => {
     ])
     .then(({ rows }) => {
       if (!rows.length) {
-        return Promise.reject({ status: 404, msg: "article ID doesn't exist" });
+        return Promise.reject({ status: 404, msg: `article ID ${article_id} doesn't exist` });
       }
       return rows[0];
     });
@@ -64,7 +64,7 @@ exports.checkIfArticleExists = (article_id) => {
       if (!rows.length) {
         return Promise.reject({
           status: 404,
-          msg: `Article id ${article_id} does not exist`,
+          msg: `article id ${article_id} does not exist`,
         });
       }
       return rows;
@@ -84,7 +84,7 @@ exports.createCommentByArticleId = (username, body, article_id) => {
       if (rows.length === 0) {
         return Promise.reject({
           status: 404,
-          msg: `User ${username} does not exist`,
+          msg: `user ${username} does not exist`,
         });
       }
       return db
@@ -112,12 +112,30 @@ exports.updateVotesByArticleId = (inc_votes, article_id) => {
       [inc_votes, article_id]
     )
     .then(({ rows }) => {
-        if (rows[0].votes < 0 ){
-          return Promise.reject({
-            status: 400,
-            msg: "votes cannot be less than 0",
-          });   
-        }
+      if (rows[0].votes < 0) {
+        return Promise.reject({
+          status: 400,
+          msg: "votes cannot be less than 0",
+        });
+      }
       return rows;
     });
+};
+
+exports.deleteCommentById = (comment_id) => {
+    if (!comment_id) {
+      return Promise.reject({
+        status: 400,
+        msg: "comment_id needed",
+      });
+    }
+    return db.query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *`, [comment_id]).then(({rows})=> {
+        if (rows.length === 0){
+          return Promise.reject({
+            status: 404,
+            msg: `no comment found at comment_id ${comment_id}`,
+          });  
+        }
+        return rows
+    })
 };
