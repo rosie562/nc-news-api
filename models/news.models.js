@@ -16,10 +16,18 @@ exports.readEndpoint = () => {
 
 exports.selectArticleById = (article_id) => {
   return db
-    .query(`SELECT * FROM articles WHERE articles.article_id = $1;`, [
-      article_id,
-    ])
+    .query(
+      `SELECT articles.*, 
+      COUNT(comments.comment_id) AS comment_count 
+      FROM articles 
+      LEFT JOIN comments 
+      ON articles.article_id = comments.article_id 
+      WHERE articles.article_id = $1
+      GROUP BY articles.article_id;`,
+      [article_id]
+    )
     .then(({ rows }) => {
+      console.log(rows);
       if (!rows.length) {
         return Promise.reject({
           status: 404,
@@ -50,7 +58,7 @@ exports.selectArticles = (topic) => {
     ON articles.article_id = comments.article_id `;
 
   const queryValues = [];
-  
+
   if (topic) {
     queryValues.push(topic);
     queryString += `WHERE topic = $1 `;
