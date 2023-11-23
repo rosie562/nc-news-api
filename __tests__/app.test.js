@@ -27,6 +27,7 @@ describe("GET /api/topics", () => {
       });
   });
 });
+
 describe("ANY /notapath", () => {
   test("404: should respond with an error message if the path is not found", () => {
     return request(app)
@@ -155,6 +156,26 @@ describe("GET /api/articles", () => {
           expect(article).toHaveProperty("comment_count");
           expect(article).not.toHaveProperty("body");
         });
+      });
+  });
+  test("200: when a topic query is requested, returns a filtered array of the articles with the requested topic", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles.length).toBe(12);
+        articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
+  test("404: should return a 404 error message when the topic requested does not exist", () => {
+    return request(app)
+      .get("/api/articles?topic=dogs")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("topic dogs does not exist");
       });
   });
 });
@@ -349,7 +370,7 @@ describe("DELETE /api/comments/:comment_id", () => {
       });
   });
   test("400: should respond with an error message if comment_id is not valid", () => {
-    return request(app) 
+    return request(app)
       .delete("/api/comments/banana")
       .expect(400)
       .then(({ body }) => {
