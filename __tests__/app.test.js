@@ -85,7 +85,18 @@ describe("GET /api/articles/:article_id", () => {
         expect(body.msg).toBe("bad request");
       });
   });
+  test("200: response has comment_count property of total count of all the comments with this article_id ", () => {
+    return request(app)
+    .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article).toHaveProperty('comment_count')
+        expect(article['comment_count']).toBe('11');
+      });
+  });
 });
+
 
 describe("GET /api/articles/:article_id/comments", () => {
   test("200: returns an array of comments for the given article_id with the correct properties", () => {
