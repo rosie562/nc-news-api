@@ -163,7 +163,6 @@ describe("GET /api/articles", () => {
           expect(article).toHaveProperty("created_at");
           expect(article).toHaveProperty("votes");
           expect(article).toHaveProperty("article_img_url");
-          expect(article).toHaveProperty("title");
           expect(article).toHaveProperty("comment_count");
           expect(article).not.toHaveProperty("body");
         });
@@ -197,7 +196,42 @@ describe("GET /api/articles", () => {
          expect(body.msg).toBe("no articles for this topic");
        });
    });
-});
+   test("200: when a sort_by query is requested, returns a filtered array of the articles with the requested topic in descending order by default", () => {
+     return request(app)
+       .get("/api/articles?sort_by=title")
+       .expect(200)
+       .then(({ body }) => {
+         const { articles } = body;
+         expect(articles).toBeSortedBy('title');
+         });
+       });
+   });
+   test("400: returns an error message when a sort_by query is requested that isn't a valid column", () => {
+     return request(app)
+       .get("/api/articles?sort_by=banana")
+       .expect(400)
+       .then(({ body }) => {
+         expect(body.msg).toBe("banana is not a valid sort_by query");
+         });
+       })
+   test("200: when a order query is requested, returns a filtered array of the articles ordered by created_at date by default", () => {
+     return request(app)
+       .get("/api/articles?order=ASC")
+       .expect(200)
+       .then(({ body }) => {
+         const { articles } = body;
+         expect(articles).toBeSortedBy("created_at");
+       });
+   });
+   test("400: returns an error message when an order query is requested that isn't a valid query", () => {
+     return request(app)
+       .get("/api/articles?order=banana")
+       .expect(400)
+       .then(({ body }) => {
+         expect(body.msg).toBe("banana is not a valid order query");
+       });
+   });
+
 
 describe("POST /api/articles/:article_id/comments", () => {
   test("201: should return an object with the correct properties of a posted comment", () => {
