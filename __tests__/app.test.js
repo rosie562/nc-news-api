@@ -223,6 +223,14 @@ describe("GET /api/articles", () => {
          expect(articles).toBeSortedBy("created_at");
        });
    });
+   test("400: returns an error message when an order query is requested that isn't a valid query", () => {
+     return request(app)
+       .get("/api/articles?order=banana")
+       .expect(400)
+       .then(({ body }) => {
+         expect(body.msg).toBe("banana is not a valid order query");
+       });
+   });
 
 
 describe("POST /api/articles/:article_id/comments", () => {
