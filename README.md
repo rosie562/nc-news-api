@@ -31,9 +31,9 @@ git clone https://github.com/rosie562/nc-news-api.git
 ```
   PGDATABASE=nc_news
 ```
-5. Run the following commands to create and seed our databases
+4. Run the following commands to create and seed our databases
 ```
 npm run setup-dbs
 npm run seed
 ```
-6. To run tests of the code, run ```npm test```
+5. To run tests of the code, run ```npm test```
