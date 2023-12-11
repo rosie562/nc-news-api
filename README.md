@@ -15,7 +15,7 @@ PostgreSQL minimum v14.0
 
 To install the API locally, follow the following instructions:
 
-1. ``cd `` into the folder you would like the repo to be in, and clone the repo by pasting the following into your terminal:
+1. ``cd`` into the folder you would like the repo to be in, and clone the repo by pasting the following into your terminal:
 ```
 git clone https://github.com/rosie562/nc-news-api.git
 ```
