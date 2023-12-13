@@ -88,16 +88,12 @@ exports.selectArticles = (topic, sort_by, order) => {
 
   queryString += `GROUP BY articles.article_id `
 
-  if (order && !sort_by) {
+  if (order) {
     queryString += `ORDER BY created_at ${order} `;
   }
 
-  if (sort_by && !order) {
+  if (sort_by) {
     queryString += `ORDER BY ${sort_by} ASC `;
-  }
-
-  if (order && sort_by) {
-    queryString += `ORDER BY ${sort_by} ${order} `;
   }
 
   if (!sort_by && !order){
